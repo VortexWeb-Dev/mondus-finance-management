@@ -91,7 +91,7 @@
                 </div>
             </a>
 
-            <a href="https://b24-oy9apg.bitrix24.com/crm/lead/details/0/" target="_blank" class="group">
+            <a href="https://mondus.group/crm/lead/details/0/" target="_blank" class="group">
                 <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 flex items-center transition-all duration-300 group-hover:shadow-md group-hover:border-amber-300">
                     <div class="rounded-full bg-amber-100 p-3 mr-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
