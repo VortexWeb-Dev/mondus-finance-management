@@ -1,0 +1,11 @@
+{
+  "name": "mondus-finance-management",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npx tailwindcss -i ./src/input.css -o ./public/css/output.css",
+    "watch": "npx tailwindcss -i ./src/input.css -o ./public/css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

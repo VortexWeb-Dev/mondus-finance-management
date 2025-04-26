@@ -1,0 +1,44 @@
+# Node.js / npm
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Tailwind CSS output
+/public/css/output.css
+
+# PHP Composer
+vendor/
+composer.lock
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Cache files
+*.cache
+/storage/*.cache
+
+# IDE/Editor files
+.idea/
+.vscode/
+*.sublime-*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Build/Production files
+/dist/
+/build/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Testing files
+/tests/coverage/
