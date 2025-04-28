@@ -448,36 +448,42 @@
 
                 // **Invoice Header**
                 doc.setFont("helvetica", "bold");
-                doc.setFontSize(18);
-                doc.text("Invoice", pageWidth / 2, y, {
+                doc.setFontSize(20);
+                doc.text("Sales Invoice", pageWidth / 2, y, {
                     align: "center"
                 });
+                y += 10;
 
+                // **Company Details (Left) and Invoice Info (Right)**
                 doc.setFontSize(12);
-                doc.setFont("helvetica", "normal");
-                y += 10;
-                doc.text(`Invoice ID: ${id}`, margin, y);
+                doc.text("Mondus Properties LLC", margin, y);
                 y += 6;
-                doc.text(`Date: ${new Date().toLocaleDateString()}`, margin, y);
+                doc.text("Office 2402, Irish Bay Tower", margin, y);
+                y += 6;
+                doc.text("Dubai, United Arab Emirates", margin, y);
+                y += 6;
+                doc.text("TRN: 10417007400003", margin, y);
                 y += 10;
 
-                // **Client Details (Boxed Section)**
+                doc.text("Invoice No:", pageWidth / 2 + 20, 30);
+                doc.text(id, pageWidth / 2 + 50, 30);
+                doc.text("Dated:", pageWidth / 2 + 20, 36);
+                doc.text(new Date().toLocaleDateString(), pageWidth / 2 + 50, 36);
+
+                // **Buyer Details (Boxed Section)**
+                y += 10;
                 doc.setDrawColor(0);
                 doc.setLineWidth(0.5);
-                doc.rect(margin, y - 3, pageWidth - margin * 2, 35); // Taller border box
-
-                y += 5;
+                doc.rect(margin, y - 5, pageWidth - margin * 2, 40);
                 doc.setFont("helvetica", "bold");
-                doc.text("Bill To:", margin + 5, y);
+                doc.text("Buyer", margin + 5, y);
                 doc.setFont("helvetica", "normal");
                 y += 7;
-                doc.text(`Client Name: ${item.ufCrm16ClientName || "N/A"}`, margin + 5, y);
+                doc.text(`Name: ${item.ufCrm16ClientName || "N/A"}`, margin + 5, y);
                 y += 6;
-                doc.text(`Client Address: ${item.ufCrm16ClientAddress || "N/A"}`, margin + 5, y);
+                doc.text(`Country: ${item.ufCrm16ClientCountry || "N/A"}`, margin + 5, y);
                 y += 6;
-                doc.text(`Phone: ${item.ufCrm16ClientPhone || "N/A"}`, margin + 5, y);
-                y += 6;
-                doc.text(`Email: ${item.ufCrm16ClientEmail || "N/A"}`, margin + 5, y);
+                doc.text(`TRN: ${item.ufCrm16ClientTRN || "N/A"}`, margin + 5, y);
                 y += 10;
 
                 // **Invoice Details Table**
@@ -485,13 +491,15 @@
                 doc.autoTable({
                     startY: tableStartY,
                     head: [
-                        ["Property Reference", "Due Date", "Amount (AED)"]
+                        ["Particulars", "VAT %", "Amount", "Taxable Value (AED)", "VAT (AED)"]
                     ],
                     body: [
                         [
                             item.ufCrm16PropertyReference || "N/A",
-                            new Date(item.ufCrm16DueDate).toLocaleDateString() || "N/A",
-                            `${parseFloat(item.ufCrm16Price || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })} AED`
+                            "5%",
+                            `${parseFloat(item.ufCrm16Price || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+                            `${(parseFloat(item.ufCrm16Price || 0) / 1.05).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+                            `${(parseFloat(item.ufCrm16Price || 0) * 0.05).toLocaleString("en-US", { minimumFractionDigits: 2 })}`
                         ],
                     ],
                     styles: {
@@ -504,11 +512,46 @@
                     },
                 });
 
-                // **Total Amount Section**
+                // **Summary Section**
                 y = doc.lastAutoTable.finalY + 10;
-                doc.setFont("helvetica", "bold");
-                doc.text(`Total Amount: ${parseFloat(item.ufCrm16Price || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })} AED`, margin, y);
                 doc.setFont("helvetica", "normal");
+                doc.text(`Amount Chargeable (in words): ${convertToWords(parseFloat(item.ufCrm16Price || 0))} AED`, margin, y);
+                y += 6;
+                doc.text(`VAT Amount (in words): ${convertToWords((parseFloat(item.ufCrm16Price || 0) * 0.05))} AED`, margin, y);
+                y += 10;
+
+                doc.text("Taxable Value:", pageWidth - 100, y);
+                doc.text(`${(parseFloat(item.ufCrm16Price || 0) / 1.05).toLocaleString("en-US", { minimumFractionDigits: 2 })} AED`, pageWidth - 50, y);
+                y += 6;
+                doc.text("Value Added Tax 5%:", pageWidth - 100, y);
+                doc.text(`${(parseFloat(item.ufCrm16Price || 0) * 0.05).toLocaleString("en-US", { minimumFractionDigits: 2 })} AED`, pageWidth - 50, y);
+                y += 6;
+                doc.setFont("helvetica", "bold");
+                doc.text("Invoice Total:", pageWidth - 100, y);
+                doc.text(`${parseFloat(item.ufCrm16Price || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })} AED`, pageWidth - 50, y);
+
+                // **Bank Details**
+                y += 15;
+                doc.setFont("helvetica", "bold");
+                doc.text("Company's Bank Details", margin, y);
+                y += 6;
+                doc.setFont("helvetica", "normal");
+                doc.text("Bank Holder's Name: Mondus Properties LLC", margin, y);
+                y += 6;
+                doc.text("Bank Name: Mashreq Bank", margin, y);
+                y += 6;
+                doc.text("A/c No: 000123456789", margin, y); // Placeholder, replace with actual data if available
+                y += 6;
+                doc.text("IBAN: AE07033000012345678901", margin, y); // Placeholder, replace with actual data if available
+                y += 6;
+                doc.text("Branch & SWIFT Code: BURJUMAN, DUBAI & BOMLAEAD", margin, y);
+
+                // **Footer**
+                y += 15;
+                doc.setFontSize(8);
+                doc.text("This is a Computer Generated Invoice", pageWidth / 2, y, {
+                    align: "center"
+                });
 
                 // **Save PDF**
                 doc.save(`Invoice_${id}.pdf`);
@@ -516,6 +559,18 @@
                 console.error(error);
                 showToast("Failed to generate PDF", "error");
             }
+        }
+
+        // Helper function to convert numbers to words (simplified example)
+        function convertToWords(number) {
+            const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+            if (number < 10) return units[Math.floor(number)];
+            if (number < 20) return teens[number - 10];
+            if (number < 100) return tens[Math.floor(number / 10)] + (number % 10 ? " " + units[number % 10] : "");
+            return "Approximate"; // Simplified, expand for larger numbers if needed
         }
 
         // Hide any open dropdown menus when clicking outside
